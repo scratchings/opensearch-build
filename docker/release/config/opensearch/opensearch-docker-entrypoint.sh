@@ -64,13 +64,15 @@ if [ -d "$OPENSEARCH_HOME/plugins/$SECURITY_PLUGIN" ]; then
         bash $OPENSEARCH_HOME/plugins/$SECURITY_PLUGIN/tools/install_demo_configuration.sh -y -i -s
     fi
 
-    if [ "$DISABLE_SECURITY_PLUGIN" = "true" ]; then
-        echo "Disabling OpenSearch Security Plugin"
-        sed -i '/plugins.security.disabled/d' $OPENSEARCH_HOME/config/opensearch.yml
-        echo "plugins.security.disabled: true" >> $OPENSEARCH_HOME/config/opensearch.yml
-    else
-        echo "Enabling OpenSearch Security Plugin"
-        sed -i '/plugins.security.disabled/d' $OPENSEARCH_HOME/config/opensearch.yml
+    if [ -w "$OPENSEARCH_HOME/config/opensearch.yml" ]; then
+        if [ "$DISABLE_SECURITY_PLUGIN" = "true" ]; then
+            echo "Disabling OpenSearch Security Plugin"
+            sed -i '/plugins.security.disabled/d' $OPENSEARCH_HOME/config/opensearch.yml
+            echo "plugins.security.disabled: true" >> $OPENSEARCH_HOME/config/opensearch.yml
+        else
+            echo "Enabling OpenSearch Security Plugin"
+            sed -i '/plugins.security.disabled/d' $OPENSEARCH_HOME/config/opensearch.yml
+        fi
     fi
 fi
 
